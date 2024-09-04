@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de Culture Générale</title>
+    <style>
+        body {
+            padding: 30px;
+            margin: 0;
+            background-color: #000;
+            font-family: 'Times New Roman', serif;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .fluide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(120deg, #0000ff, #00ffff, #ffff00, #ffa500);
+  background-size: 300% 300%;
+  animation: fluide 10s ease-in-out infinite;
+}
+
+@keyframes fluide {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+.wave {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('data:image/svg+xml,%3c<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" fill="%2300ffff" fill-opacity="0.5">
+    <path d="M0,128L120,96C240,64,480,0,720,32C960,64,1200,128,1320,160L1440,192L1440,320L1320,320C1200,320,960,320,720,320C480,320,240,320,120,320L0,320Z"/>
+  </svg>
+  ');
+  background-size: 100% 100%;
+  animation: wave 10s ease-in-out infinite;
+}
+
+@keyframes wave {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-20%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+        header {
+            padding: 10px;
+            text-align: center;
+            background-color: #0f0;
+            border: 2px solid #000;
+        }
+        #quiz-container {
+            padding: 20px;
+            text-align: center;
+            background-color: #ffff00;
+            border: 1px solid #000;
+        }
+        .response {
+            padding: 10px;
+            margin: 5px;
+            border: 2px solid #000;
+        }
+        .correct {
+            background-color: #28a745;
+        }
+        .incorrect {
+            background-color: #dc3545;
+        }
+        footer {
+            width: 100%;
+            text-align: center;
+            padding: 10px;
+            background-color: #ffff00;
+            border-top: 2px solid #000;
+            margin-top: 20px;
+            font-family: 'Times New Roman', serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="fluide">
+    <div class="wave">
+    <header>
+        <h1>Quiz de Culture Générale</h1>
+    </header>
+   <main>
+        <p id="question">Question : . . . . . . . . . . . !</p>
+        <div id="quiz-container">
+            <form id="quiz-form"></form>
+            <div>
+                <h2 class="response">Choisis une des réponses ! <span id="selected-text"></span></h2>
+            </div>
+            <button id="next-button">Suivant</button>
+        </div>
+        <div id="result" style="display: none;">
+            <p id="score"></p>
+            <button onclick="restartquiz()">Recommencer le Quiz</button>
+        </div>
+    </main>
+
+    <footer>
+        <h4>&copy; Développé par Luka et Djamal</h4>
+    </footer>
+    </dîv>
+    </div>
+
+    <script>
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let questions = [
+            { question: 'Quelle est la capitale de la France ?', options: ['Paris', 'Londres', 'Berlin', 'Madrid'], correctAnswer: 'Paris' },
+            { question: 'Quel est l\'élement chimique dont le symbole est O ?', options: ['Oxygène', 'Or', 'Osmium', 'Oganesson'], correctAnswer: 'Oxygène' },
+            { question: 'Combien vaut le carré de 4 ?', options: ['8', '16', '6', '12'], correctAnswer: '16' },
+            { question: 'Quel est le plus grand océan ?', options: ['Atlantique', 'Arctique', 'Indien', 'Pacifique'], correctAnswer: 'Pacifique' },
+            { question: 'Quel est le plus haut sommet du monde ?', options: ['Mont Everest', 'K2', 'Kangchenjunga', 'Makalu'], correctAnswer: 'Mont Everest' },
+            { question: 'Quel pays est le plus vaste du monde ?', options: ['Canada', 'Chine', 'États-Unis', 'Russie'], correctAnswer: 'Russie' },
+            { question: 'Qui est lu2019auteur de "Misérables" ?', options: ['Victor Hugo', 'Émile Zola', 'Gustave Flaubert', 'Honoré de Balzac'], correctAnswer: 'Victor Hugo' },
+            { question: 'Quel est l\'élement chimique dont le symbole est Fe ?', options: ['Fer', 'Fluor', 'Francium', 'Fermium'], correctAnswer: 'Fer' },
+            { question: 'Quel est le nom du plus grand désert du monde ?', options: ['Sahara', 'Gobi', 'Arctique', 'Antarctique'], correctAnswer: 'Antarctique' },
+            { question: 'Quel est l\u2019art martial d\u2019urigine japonaise qui utilise des sabres ?', options: ['Karate', 'Judo', 'Kendo', 'Aikido'], correctAnswer: 'Kendo' },
+            {
+                question: 'combien fait 2+2-2*2', options: ['4', '6', '0', 'aucune reponse'],
+                correcrAnswer: '0'
+            },
+            { question: 'Êtes-vous prêt à savoir votre score ?',
+                options: ['oui','non'], correctAnswer: 'oui',
+                
+                }
+     
+        ];
+
+        function displayQuestion() {
+            if (currentQuestionIndex >= questions.length) {
+                showResult();
+                return;
+            }
+
+            const questionData = questions[currentQuestionIndex];
+            document.getElementById('question').textContent = questionData.question;
+
+            const form = document.getElementById('quiz-form');
+            form.innerHTML = '';
+            questionData.options.forEach((option, index) => {
+                const input = document.createElement('input');
+                input.type = 'radio';
+                input.name = 'reponse';
+                input.value = option;
+                input.id = 'option' + index;
+                form.appendChild(input);
+
+                const label = document.createElement('label');
+                label.htmlFor = input.id;
+                label.textContent = option;
+                form.appendChild(label);
+                form.appendChild(document.createElement('br'));
+            });
+        }
+
+        document.getElementById('next-button').addEventListener('click', (event) => {
+            event.preventDefault();
+            const selectedOption = document.querySelector('input[name="reponse"]:checked');
+            if (!selectedOption) {
+                alert('Veuillez choisir une réponse !');
+                return;
+            }
+
+            const answer = selectedOption.value;
+            if (answer === questions[currentQuestionIndex].correctAnswer) {
+                score++;
+            }
+            currentQuestionIndex++;
+            displayQuestion();
+        });
+
+        function showResult() {
+            document.getElementById('quiz-container').style.display = 'none';
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('score').textContent = 'Votre score : ' + score + '/' + questions.length;
+        }
+
+        function restartquiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            document.getElementById('quiz-container').style.display = 'block';
+            document.getElementById('result').style.display = 'none';
+            displayQuestion();
+        }
+
+        window.onload = displayQuestion;
+    </script>
+</body>
+      </html
